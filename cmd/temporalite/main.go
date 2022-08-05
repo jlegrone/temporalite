@@ -9,6 +9,7 @@ import (
 	goLog "log"
 	"net"
 	"os"
+	"runtime/debug"
 	"strings"
 
 	"github.com/urfave/cli/v2"
@@ -60,10 +61,15 @@ func main() {
 }
 
 func buildCLI() *cli.App {
+	version := "unknown"
+	if info, ok := debug.ReadBuildInfo(); ok {
+		version = info.Main.Version
+	}
+
 	app := cli.NewApp()
-	app.Name = "temporal"
-	app.Usage = "Temporal server"
-	app.Version = headers.ServerVersion
+	app.Name = "temporalite"
+	app.Usage = "An experimental distribution of Temporal that runs as a single process\n\nFind more information at: https://github.com/temporalio/temporalite"
+	app.Version = fmt.Sprintf("%s, server %s", version, headers.ServerVersion)
 	app.Commands = []*cli.Command{
 		{
 			Name:      "start",
